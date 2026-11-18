@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 /* Layout idea: five full-screen panels that snap one at a time. Black and brass, after
-   Jackalope's charred timber and the amber bulb ceiling of Doot Doot Doot.
+   Jackalope's charred timber and amber light.
    Desktop: photo and text share each panel. Phone: photo sits behind the text. */
 :root{
   --ink:#0d0c0b;
@@ -108,6 +108,8 @@ p{margin:0;max-width:34rem}
 .hero .content{justify-content:center;align-items:center;text-align:center;gap:1.75rem;padding-bottom:6rem}
 h1{font-size:clamp(3.1rem,12.5vw,9rem);line-height:.95;letter-spacing:-.01em}
 h1 em{font-style:italic;color:var(--brass);padding:0 .06em}
+.hero .invite{font-family:var(--display);font-size:clamp(1.35rem,3.6vw,2.1rem);font-weight:300;
+  line-height:1.3;max-width:22ch;text-wrap:balance}
 .hero .date{font-family:var(--display);font-size:clamp(1.3rem,3.4vw,1.9rem);font-style:italic}
 .hero .where{font:400 .72rem/1.8 var(--body);letter-spacing:.3em;text-transform:uppercase}
 .cue{position:absolute;left:50%;bottom:1.75rem;transform:translateX(-50%);z-index:2;display:grid;justify-items:center;
@@ -125,10 +127,29 @@ h1 em{font-style:italic;color:var(--brass);padding:0 .06em}
 .sheet dd{font-family:var(--display);font-size:1.3rem;line-height:1.25}
 .sheet dd span{display:block;font:300 .84rem/1.5 var(--body);color:var(--mute);margin-top:.15rem}
 
-/* ---------- Menu courses ---------- */
-.courses{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.35rem .5rem;max-width:32rem;
-  font-family:var(--display);font-size:1.25rem;font-style:italic;line-height:1.3}
-.courses li:not(:last-child)::after{content:"·";color:var(--brass);margin-left:.5rem;font-style:normal}
+/* ---------- The invitation ---------- */
+.invitation{background:var(--char)}
+/* Double gold frame, starting below the fixed header so it never crosses R & G or Menu. */
+.invitation{--fx:clamp(1rem,3vw,2rem);--fy:4.6rem}
+.invitation::before{content:"";position:absolute;inset:var(--fy) var(--fx) var(--fx);border:1px solid rgba(201,163,92,.35);
+  pointer-events:none}
+.invitation::after{content:"";position:absolute;inset:calc(var(--fy) + 7px) calc(var(--fx) + 7px) calc(var(--fx) + 7px);
+  border:1px solid rgba(201,163,92,.14);pointer-events:none}
+.invitation .content{justify-content:center;align-items:center;text-align:center;max-width:46rem;margin:0 auto;
+  padding:6rem clamp(2rem,8vw,4rem);gap:1.6rem}
+.invitation h2{font-size:clamp(2.6rem,7vw,5.2rem);line-height:1}
+.invitation h2 em{display:block}
+.invitation .letter{font-family:var(--display);font-size:clamp(1.2rem,2.6vw,1.55rem);line-height:1.5;max-width:36rem;
+  text-wrap:pretty}
+.invitation .sign{font-family:var(--display);font-style:italic;font-size:1.5rem;color:var(--brass)}
+.invitation .when{display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem 1.4rem;
+  font:400 .72rem/1.8 var(--body);letter-spacing:.28em;text-transform:uppercase}
+.invitation .when span + span::before{content:"·";color:var(--brass);margin-right:1.4rem}
+@media (max-width:599px){
+  .invitation .when{flex-direction:column;gap:.1rem}
+  .invitation .when span + span::before{content:none}
+}
+.invitation .link{align-self:center}
 
 /* ---------- RSVP ---------- */
 .rsvp{background:var(--char)}
@@ -199,9 +220,9 @@ button.send[disabled]{opacity:.5;cursor:wait}
   <div>
     <ul>
       <li><a href="#welcome" data-jump style="--i:0">Welcome</a></li>
-      <li><a href="#the-day" data-jump style="--i:1">The Day</a></li>
-      <li><a href="#the-place" data-jump style="--i:2">The Place</a></li>
-      <li><a href="#the-table" data-jump style="--i:3">The Table</a></li>
+      <li><a href="#invitation" data-jump style="--i:1">The Invitation</a></li>
+      <li><a href="#the-day" data-jump style="--i:2">The Day</a></li>
+      <li><a href="#the-place" data-jump style="--i:3">The Place</a></li>
       <li><a href="#rsvp" data-jump style="--i:4">RSVP</a></li>
     </ul>
     <small>Saturday 20 February 2027</small>
@@ -211,7 +232,7 @@ button.send[disabled]{opacity:.5;cursor:wait}
 <div class="dots" id="dots" aria-label="Jump to section"></div>
 
 <!--
-  PHOTOS: all five are Jackalope's own images, loaded straight from jackalopehotels.com.
+  PHOTOS: all three are Jackalope's own images, loaded straight from jackalopehotels.com.
   To swap one, change its src. For reliability, download them into an "images" folder
   beside this file and point each src there instead (e.g. src="images/hero.jpg").
 -->
@@ -226,14 +247,28 @@ button.send[disabled]{opacity:.5;cursor:wait}
     <div class="content">
       <p class="eyebrow reveal" style="--d:0">Together with their families</p>
       <h1 class="reveal" style="--d:1">Rachel <em>&amp;</em> Glenn</h1>
-      <hr class="rule reveal" style="--d:2">
-      <p class="date reveal" style="--d:3">Saturday, 20 February 2027</p>
-      <p class="where reveal" style="--d:4">Jackalope<br>Mornington Peninsula</p>
+      <p class="invite reveal" style="--d:2">invite you to celebrate their marriage</p>
+      <hr class="rule reveal" style="--d:3">
+      <p class="date reveal" style="--d:4">Saturday, 20 February 2027</p>
+      <p class="where reveal" style="--d:5">Jackalope<br>Mornington Peninsula</p>
     </div>
-    <a class="cue" href="#the-day" data-jump>Scroll</a>
+    <a class="cue" href="#invitation" data-jump>Scroll</a>
   </section>
 
-  <!-- 2. The day -->
+  <!-- 2. The invitation -->
+  <section class="panel invitation" id="invitation" data-title="The Invitation">
+    <div class="content">
+      <p class="eyebrow reveal" style="--d:0">You're invited</p>
+      <h2 class="reveal" style="--d:1">Join us <em>as we marry</em></h2>
+      <hr class="rule reveal" style="--d:2">
+      <p class="letter reveal" style="--d:3">Ten years, two little boys and one much-renovated home later, we are getting married. It would mean the world to have you there with us as we say our vows, and to celebrate with the people we love most, long into the evening.</p>
+      <p class="sign reveal" style="--d:4">With love, Rachel &amp; Glenn</p>
+      <p class="when reveal" style="--d:5"><span>Saturday 20 February 2027</span><span>4.15 pm</span><span>Jackalope</span></p>
+      <a class="link reveal" style="--d:6" href="#rsvp" data-jump>Reply to the invitation</a>
+    </div>
+  </section>
+
+  <!-- 3. The day -->
   <section class="panel split" id="the-day" data-title="The Day">
     <div class="media">
       <img src="https://jackalopehotels.com/wp-content/uploads/2023/12/Jackalope_Wedding_Jackyak.png"
@@ -241,18 +276,18 @@ button.send[disabled]{opacity:.5;cursor:wait}
     </div>
     <div class="content">
       <p class="eyebrow reveal" style="--d:0">The Day</p>
-      <h2 class="reveal" style="--d:1">An afternoon, <em>then a long dinner</em></h2>
+      <h2 class="reveal" style="--d:1">A ceremony, <em>then a celebration</em></h2>
       <dl class="sheet reveal" style="--d:2">
         <div><dt>4.15 pm</dt><dd>Arrive<span>Guest Terrace, overlooking the vines</span></dd></div>
-        <div><dt>4.30 pm</dt><dd>Ceremony</dd></div>
-        <div><dt>5.00 pm</dt><dd>Champagne and canapés<span>On the terrace</span></dd></div>
-        <div><dt>6.00 pm</dt><dd>Dinner by Doot Doot Doot<span>Seated in Jackyak</span></dd></div>
+        <div><dt>4.30 pm</dt><dd>We say “I do”</dd></div>
+        <div><dt>5.00 pm</dt><dd>Drinks on the terrace</dd></div>
+        <div><dt>6.00 pm</dt><dd>Reception<span>Together in Jackyak</span></dd></div>
         <div><dt>11.00 pm</dt><dd>Goodnight</dd></div>
       </dl>
     </div>
   </section>
 
-  <!-- 3. The place -->
+  <!-- 4. The place -->
   <section class="panel split flip" id="the-place" data-title="The Place">
     <div class="media">
       <img src="https://jackalopehotels.com/wp-content/uploads/2026/03/Frame-452-2-scaled.jpg"
@@ -261,28 +296,10 @@ button.send[disabled]{opacity:.5;cursor:wait}
     <div class="content">
       <p class="eyebrow reveal" style="--d:0">The Place</p>
       <h2 class="reveal" style="--d:1">Jackalope, <em>Merricks North</em></h2>
-      <p class="reveal" style="--d:2">A black-clad hotel set in a working vineyard on the Mornington Peninsula, about an hour's drive from Melbourne. The whole day happens in one place, so once you arrive there is nowhere else to be.</p>
+      <p class="reveal" style="--d:2">We're marrying among the vines on the Mornington Peninsula, about an hour's drive from Melbourne. The ceremony and the celebration are all in one place, so once you arrive, the only thing left to do is be with us.</p>
       <p class="reveal" style="--d:3">166 Balnarring Road, Merricks North, Victoria 3926<br>
         <span class="fine">If the weather turns, the ceremony moves indoors.</span></p>
       <a class="link reveal" style="--d:4" href="https://www.google.com/maps/search/?api=1&query=Jackalope+Hotel+166+Balnarring+Road+Merricks+North+VIC" target="_blank" rel="noopener">Open in Maps</a>
-    </div>
-  </section>
-
-  <!-- 4. The table -->
-  <section class="panel split" id="the-table" data-title="The Table">
-    <div class="media">
-      <img src="https://jackalopehotels.com/wp-content/uploads/2024/07/Wedding-Dining-Jackalope.jpg"
-           alt="" referrerpolicy="no-referrer" loading="lazy" onerror="this.remove()">
-    </div>
-    <div class="content">
-      <p class="eyebrow reveal" style="--d:0">The Table</p>
-      <h2 class="reveal" style="--d:1">Dinner by <em style="white-space:nowrap">Doot Doot Doot</em></h2>
-      <p class="reveal" style="--d:2">A private, seasonal menu from Jackalope's fine dining restaurant, served across the evening with wines from the cellar.</p>
-      <ul class="courses reveal" style="--d:3">
-        <li>Oyster</li><li>Caviar</li><li>Tempura scallop</li><li>Spanner crab</li>
-        <li>Pork belly, abalone</li><li>Wagyu or blue eye</li><li>Dessert</li>
-      </ul>
-      <p class="fine reveal" style="--d:4">The menu leans towards seafood and will follow the season. Please tell us about any allergies or dietary needs when you reply and the kitchen will look after you.</p>
     </div>
   </section>
 
@@ -290,8 +307,8 @@ button.send[disabled]{opacity:.5;cursor:wait}
   <section class="panel rsvp" id="rsvp" data-title="RSVP">
     <div class="content">
       <p class="eyebrow reveal" style="--d:0">RSVP</p>
-      <h2 class="reveal" style="--d:1">Will you <em>join us?</em></h2>
-      <p class="fine reveal" style="--d:2">Kindly reply by <span id="rsvp-by"></span>. Please enter names as they appear on your invitation.</p>
+      <h2 class="reveal" style="--d:1">Will you <em>celebrate with us?</em></h2>
+      <p class="fine reveal" style="--d:2">Kindly reply by <span id="rsvp-by"></span>. Please enter names as they appear on your invitation, and let us know of any dietary requirements.</p>
 
       <form id="rsvp-form" class="reveal" style="--d:3" novalidate>
         <fieldset>
@@ -301,7 +318,7 @@ button.send[disabled]{opacity:.5;cursor:wait}
           <div class="field"><label for="g1-last">Last name</label>
             <input id="g1-last" name="g1Last" type="text" autocomplete="family-name" autocapitalize="words" required></div>
           <div class="field wide"><label for="g1-diet">Dietary requirements</label>
-            <input id="g1-diet" name="g1Diet" type="text" autocomplete="off" placeholder="Allergies, vegetarian, no shellfish"></div>
+            <input id="g1-diet" name="g1Diet" type="text" autocomplete="off" placeholder="Allergies, vegetarian, anything we should know"></div>
         </fieldset>
         <fieldset>
           <legend>Guest two <span>if replying for two</span></legend>

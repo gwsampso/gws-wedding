@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#050505">
+<title>The 10 Year Path: Bonus Level</title>
+<meta name="description" content="A wild invitation appeared. Rachel and Glenn's wedding, as an 8-bit quest.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* Part II of "The 10 Year Path" (gwsampso.github.io/rachel_quest): same CRT, same fonts,
+   same beeps, same pink/yellow/green palette. Plain HTML, CSS and JS, no build step. */
+:root{
+  --bg:#050505; --panel:#111827; --deep:#030712; --well:#1f2937; --rim:#374151; --dim:#6b7280;
+  --white:#ffffff; --pink:#ec4899; --pink-hi:#f472b6; --pink-btn:#db2777; --pink-lo:#831843;
+  --yellow:#facc15; --yellow-hi:#fde047; --green:#4ade80; --green-rim:#22c55e; --green-btn:#16a34a; --green-lo:#166534;
+  --red:#ef4444; --blue:#60a5fa; --ice:#dbeafe; --purple:#c084fc; --orange:#fb923c;
+  --pixel:"Press Start 2P",ui-monospace,monospace;
+  --term:"VT323",ui-monospace,monospace;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--white);font-family:var(--pixel);font-size:10px;line-height:1.8;
+  overflow-x:hidden;-webkit-font-smoothing:none;
+  cursor:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><rect x="0" y="0" width="4" height="4" fill="white"/><rect x="4" y="4" width="4" height="4" fill="white"/><rect x="8" y="8" width="4" height="4" fill="white"/><rect x="0" y="0" width="2" height="2" fill="black"/><rect x="4" y="4" width="2" height="2" fill="black"/><rect x="8" y="8" width="2" height="2" fill="black"/></svg>'),auto}
+button,a,input{font:inherit;color:inherit}
+button{cursor:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+[hidden]{display:none!important}
+
+/* ---------- CRT ---------- */
+body::before{content:"";position:fixed;inset:0;z-index:1000;pointer-events:none;
+  background:linear-gradient(rgba(18,16,16,0) 50%,rgba(0,0,0,.25) 50%),
+    linear-gradient(90deg,rgba(255,0,0,.06),rgba(0,255,0,.02),rgba(0,0,255,.06));
+  background-size:100% 2px,3px 100%}
+body::after{content:"";position:fixed;inset:0;z-index:1001;pointer-events:none;background:rgba(18,16,16,.1);
+  animation:flicker .15s infinite}
+@keyframes flicker{0%{opacity:.28}10%{opacity:.24}20%{opacity:.18}30%{opacity:.66}40%{opacity:.27}50%{opacity:.96}
+  60%{opacity:.71}70%{opacity:.86}80%{opacity:.49}90%{opacity:.29}100%{opacity:.63}}
+
+/* ---------- Layout ---------- */
+#app{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px 16px 96px;gap:28px;width:100%}
+.screen-in{animation:screen-in .35s steps(4) both}
+@keyframes screen-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- Retro card (from components/RetroCard) ---------- */
+.card{position:relative;width:100%;max-width:560px;background:var(--panel);border:4px solid var(--white);
+  box-shadow:0 0 10px rgba(255,255,255,.3);padding:28px 18px 22px}
+.card.pink{border-color:var(--pink);box-shadow:0 0 10px rgba(236,72,153,.5)}
+.card.green{border-color:var(--green-rim);box-shadow:0 0 10px rgba(34,197,94,.5)}
+.card.red{border-color:var(--red);box-shadow:0 0 10px rgba(239,68,68,.5)}
+.card.gold{border-color:var(--yellow-hi);box-shadow:0 0 18px rgba(250,204,21,.45)}
+.card .tag{position:absolute;top:-14px;left:16px;background:var(--panel);padding:0 8px;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;border-left:2px solid currentColor;border-right:2px solid currentColor;color:var(--green)}
+.card.pink .tag,.card.gold .tag{color:var(--pink-hi)}
+.card .c{position:absolute;width:8px;height:8px;background:var(--white);opacity:.5}
+.card .c1{top:4px;left:4px}.card .c2{top:4px;right:4px}.card .c3{bottom:4px;left:4px}.card .c4{bottom:4px;right:4px}
+@media (min-width:640px){.card{padding:34px 28px 26px}body{font-size:11px}}
+
+/* ---------- Type ---------- */
+.title{font-size:clamp(24px,8vw,44px);line-height:1.15;color:var(--yellow);text-shadow:4px 4px 0 #000;margin:0 0 18px;text-transform:uppercase}
+.sub{color:var(--green);margin:0}
+.blink{animation:blink 1.1s steps(2) infinite}
+@keyframes blink{50%{opacity:.25}}
+.say{font-family:var(--term);font-size:22px;line-height:1.3;color:var(--ice);margin:0;min-height:3.9em}
+.say .caret{animation:blink .6s steps(2) infinite}
+.center{text-align:center}
+.small{font-size:8px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase}
+.eyebrow{font-size:9px;color:var(--green);letter-spacing:.2em;text-transform:uppercase;margin:0 0 10px}
+h2{font-size:14px;line-height:1.6;margin:0 0 14px;text-transform:uppercase}
+@media (min-width:640px){h2{font-size:17px}.say{font-size:26px}}
+
+/* ---------- Buttons ---------- */
+.btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;max-width:320px;margin:0 auto;
+  padding:16px 18px;border:0;border-bottom:8px solid var(--pink-lo);background:var(--pink-btn);color:#fff;
+  font-size:11px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;text-align:center;
+  transition:background .1s}
+.btn:hover{background:var(--pink)}
+.btn:active{border-bottom-width:0;margin-top:8px}
+.btn.green{background:var(--green-btn);border-bottom-color:var(--green-lo)}
+.btn.green:hover{background:var(--green-rim)}
+.btn.grey{background:var(--rim);border-bottom-color:#111}
+.btn.grey:hover{background:#4b5563}
+.btn.gold{background:#ca8a04;border-bottom-color:#713f12}
+.btn.gold:hover{background:#eab308}
+.link-btn{background:none;border:0;padding:6px;color:var(--dim);font-size:8px;text-decoration:underline;text-transform:uppercase}
+.link-btn:hover{color:#fff}
+
+/* Options (A/B) */
+.options{display:grid;gap:14px;width:100%;max-width:560px}
+.opt{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;padding:16px;background:var(--well);
+  border:3px solid var(--rim);border-bottom-width:6px;color:#fff;transition:border-color .1s,transform .1s}
+.opt:hover,.opt:focus-visible{border-color:var(--pink);transform:translateX(4px)}
+.opt b{flex:none;display:grid;place-items:center;width:28px;height:28px;background:var(--pink-btn);font-size:11px}
+.opt span{font-family:var(--term);font-size:21px;line-height:1.15}
+.opt small{display:block;font-family:var(--pixel);font-size:8px;color:var(--dim);margin-bottom:6px}
+.options.reveal .opt{animation:opt-in .3s steps(3) both}
+.options.reveal .opt:nth-child(2){animation-delay:.12s}
+@keyframes opt-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ---------- HUD (sticky top bar) ---------- */
+.hud{position:sticky;top:0;z-index:20;background:#000;border-bottom:4px solid #be185d;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+.hud-in{max-width:900px;margin:0 auto;padding:8px 12px 10px}
+.hud .lvl{text-align:center;font-size:8px;color:var(--green);letter-spacing:.2em;text-transform:uppercase;
+  padding-bottom:6px;margin-bottom:8px;border-bottom:1px solid var(--well)}
+.meter{display:flex;justify-content:center;align-items:center;gap:10px;margin-bottom:10px}
+.meter .heart{color:var(--red);font-size:14px;animation:blink 1.4s steps(2) infinite}
+.bar{width:min(256px,45vw);height:12px;background:var(--well);border:1px solid #4b5563}
+.bar i{display:block;height:100%;width:0;background:var(--red);box-shadow:0 0 10px rgba(239,68,68,.5);transition:width 1.2s steps(12)}
+.hud-grid{display:grid;grid-template-columns:1.4fr .8fr 1fr;gap:6px;text-align:center;align-items:start}
+.hud-grid .k{font-size:6px;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px}
+.row{display:flex;justify-content:center;align-items:center;min-height:30px}
+.party .av + .av{margin-left:-4px}
+.house{font-size:22px;line-height:1}
+.items{gap:4px;flex-wrap:wrap}
+.item{display:grid;place-items:center;width:26px;height:26px;background:var(--well);border:2px solid #4b5563;font-size:14px;line-height:1}
+.item.new{border-color:var(--yellow);animation:pop .5s steps(3)}
+@keyframes pop{0%{transform:scale(1.8)}100%{transform:none}}
+@media (min-width:640px){.hud .lvl{font-size:10px}.hud-grid .k{font-size:8px}.item{width:32px;height:32px;font-size:17px}.row{min-height:40px}.house{font-size:28px}}
+
+/* ---------- Avatars (same DiceBear seeds as components/PixelAvatar) ---------- */
+.av{position:relative;flex:none;display:inline-grid;place-items:center;border:2px solid #fff;background:#312e81;overflow:hidden;
+  image-rendering:pixelated}
+.av img{width:100%;height:100%;object-fit:cover}
+.av.kid{background:#3730a3}
+.av.you{background:var(--pink-lo)}
+.av.empty{background:#000;border-style:dashed;border-color:var(--dim);color:var(--dim);font-size:10px}
+.av.empty.pulse{animation:blink 1s steps(2) infinite;border-color:var(--pink);color:var(--pink)}
+.av .ini{position:absolute;inset:0;display:grid;place-items:center;font-size:9px}
+.av.joined{animation:pop .6s steps(3)}
+
+/* ---------- Boot ---------- */
+.spinner{width:44px;height:44px;border:5px solid var(--green);border-right-color:transparent;border-radius:50%;
+  animation:spin .8s steps(8) infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- Recap ---------- */
+.log{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.log li{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:baseline;opacity:0;transform:translateX(-6px);
+  transition:opacity .2s steps(2),transform .2s steps(2)}
+.log li.on{opacity:1;transform:none}
+.log .yr{font-size:8px;color:var(--yellow)}
+.log .what{font-family:var(--term);font-size:20px;line-height:1.1;color:var(--ice)}
+.log .ok{font-size:9px;color:var(--green)}
+.log li.big .what{color:var(--pink-hi)}
+.memory{margin:18px auto 0;display:grid;gap:8px;justify-items:center;opacity:0;transition:opacity .6s steps(4)}
+.memory.on{opacity:1}
+.memory canvas{width:min(260px,70vw);height:auto;border:4px solid var(--yellow-hi);image-rendering:pixelated;background:#000}
+
+/* ---------- Name entry ---------- */
+.name-in{width:100%;max-width:320px;margin:0 auto;display:block;background:#000;border:3px solid var(--pink);
+  padding:14px;text-align:center;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);caret-color:var(--pink)}
+.name-in::placeholder{color:#4b5563}
+.name-in:focus{outline:0;box-shadow:0 0 0 3px rgba(236,72,153,.35)}
+.preview{display:flex;justify-content:center;gap:16px;align-items:center;margin:18px 0}
+
+/* ---------- Encounter ---------- */
+.checker{position:fixed;inset:0;z-index:900;display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:repeat(12,1fr);pointer-events:none}
+.checker i{background:#000;opacity:0;animation:check-in .5s steps(3) forwards}
+.checker.out i{animation:check-out .4s steps(3) forwards}
+@keyframes check-in{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1.5)}}
+@keyframes check-out{from{opacity:1;transform:scale(1.5)}to{opacity:0;transform:scale(0)}}
+.shake{animation:shake .45s steps(6)}
+@keyframes shake{0%,100%{transform:none}20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-4px,-2px)}80%{transform:translate(4px,3px)}}
+
+.arena{width:100%;max-width:560px;display:grid;gap:18px}
+.foe{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+.foe-hp{background:var(--panel);border:3px solid #fff;padding:10px 12px}
+.foe-hp .nm{font-size:10px;margin-bottom:8px}
+.foe-hp .lv{float:right;color:var(--yellow)}
+.hpbar{height:8px;background:var(--well);border:1px solid #4b5563}
+.hpbar i{display:block;height:100%;width:100%;background:var(--green-rim);transition:width .9s steps(10)}
+.envelope{width:120px;height:auto;animation:bob 1.2s steps(2) infinite;filter:drop-shadow(0 0 14px rgba(236,72,153,.6))}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.foe.hit .envelope{animation:hit .5s steps(4)}
+@keyframes hit{25%,75%{opacity:0}50%,100%{opacity:1}}
+.invite{border:3px double var(--yellow-hi);background:#0b0f1a;padding:18px 14px;text-align:center}
+.invite .names{font-size:clamp(15px,4.6vw,22px);color:var(--yellow);text-shadow:3px 3px 0 #000;line-height:1.5;margin:6px 0 10px}
+.invite .line{font-family:var(--term);font-size:22px;line-height:1.2;color:var(--ice);margin:0 0 12px}
+.invite .meta{font-size:8px;color:var(--pink-hi);letter-spacing:.12em;line-height:2.2}
+.cmd{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:var(--panel);border:3px solid #fff;padding:12px}
+.cmd button{background:none;border:0;padding:12px 8px 12px 26px;text-align:left;font-size:12px;text-transform:uppercase;position:relative}
+.cmd button::before{content:"";position:absolute;left:6px;top:50%;margin-top:-6px;border:6px solid transparent;border-left-color:var(--yellow);
+  border-right:0;opacity:0}
+.cmd button:hover::before,.cmd button:focus-visible::before{opacity:1;animation:blink .6s steps(2) infinite}
+.cmd button:focus-visible{outline:0}
+.cmd .accept{color:var(--green)}
+.cmd .run{color:var(--dim)}
+.msg{min-height:3.2em}
+
+/* ---------- Level up ---------- */
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.95);display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
+.levelup{display:inline-block;color:var(--yellow-hi);font-size:clamp(16px,5vw,22px);letter-spacing:.2em;border-top:4px solid var(--yellow-hi);
+  border-bottom:4px solid var(--yellow-hi);padding:8px 4px;animation:bounce .8s steps(2) infinite;text-transform:uppercase}
+@keyframes bounce{50%{transform:translateY(-6px)}}
+.gains{background:rgba(31,41,55,.8);border:2px solid var(--green-lo);border-radius:6px;padding:14px;display:grid;gap:12px;margin:18px 0}
+.gains div{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:9px}
+.gains div + div{border-top:1px solid var(--rim);padding-top:12px}
+.gains .l1{color:var(--pink-hi)}.gains .l2{color:var(--blue)}.gains .l3{color:var(--purple)}
+.gains b{color:#fff}.gains .gold{color:var(--yellow-hi)}
+
+/* ---------- Quest log ---------- */
+.ql{display:grid;gap:22px;width:100%;max-width:640px}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:8px;text-transform:uppercase;color:#9ca3af}
+.facts div{border:1px solid var(--rim);padding:10px}
+.facts p{margin:0 0 6px;font-size:7px;color:var(--dim)}
+.facts b{display:block;color:#fff;font-size:11px;line-height:1.6;font-weight:400}
+.facts .wide{grid-column:1/-1}
+.obj{list-style:none;margin:0;padding:0;display:grid}
+.obj li{display:grid;grid-template-columns:76px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--well);align-items:baseline}
+.obj .t{font-size:9px;color:var(--yellow)}
+.obj .d{font-family:var(--term);font-size:21px;line-height:1.15}
+.obj .d small{display:block;font-family:var(--pixel);font-size:7px;color:var(--dim);margin-top:4px;text-transform:uppercase;letter-spacing:.1em}
+.obj li.main .d{color:var(--pink-hi)}
+.acts{display:grid;gap:14px}
+@media (min-width:640px){.acts{grid-template-columns:1fr 1fr}.acts .btn{max-width:none}.acts .span{grid-column:1/-1}}
+.end{text-align:center;display:grid;gap:10px;justify-items:center}
+.end .big{font-size:clamp(13px,4vw,18px);color:var(--yellow);animation:blink 1.4s steps(2) infinite;margin:0}
+.toast{font-size:8px;color:var(--green);min-height:1.6em;text-align:center;margin:0}
+
+/* hearts */
+.hearts{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden}
+.hearts span{position:absolute;color:var(--pink);animation:float 2.4s steps(8) forwards}
+@keyframes float{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-120px)}}
+
+/* ---------- Sound toggle ---------- */
+.sound{position:fixed;right:12px;bottom:12px;z-index:60;background:#000;border:2px solid var(--rim);padding:8px 10px;font-size:8px;color:var(--dim)}
+.sound[aria-pressed="true"]{color:var(--green);border-color:var(--green-lo)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+  .log li{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="hearts" id="hearts" aria-hidden="true"></div>
+<button class="sound" id="sound" type="button" aria-pressed="true">SOUND: ON</button>
+
+<script>
+/* =====================================================================
+   THE 10 YEAR PATH · BONUS LEVEL
+   Everything you're likely to change is in WEDDING and RECAP.
+   ===================================================================== */
+const WEDDING = {
+  date: "SAT 20 FEB 2027",
+  arrive: "4:15 PM",
+  venue: "JACKALOPE",
+  area: "MERRICKS NORTH",
+  address: "166 Balnarring Road, Merricks North VIC 3926",
+  maps: "https://www.google.com/maps/search/?api=1&query=Jackalope+Hotel+166+Balnarring+Road+Merricks+North+VIC",
+  rsvp: "../#rsvp",
+  partOne: "https://gwsampso.github.io/rachel_quest/",
+  memory: "https://gwsampso.github.io/rachel_quest/assets/proposal.jpg",
+  schedule: [
+    ["4:15 PM", "Spawn point", "Guest Terrace, overlooking the vines"],
+    ["4:30 PM", "Main quest: the vows", "Ceremony", true],
+    ["5:00 PM", "Side quest: drinks on the terrace", ""],
+    ["6:00 PM", "Party level", "Reception in Jackyak"],
+    ["11:00 PM", "Game over (in a good way)", "Goodnight"]
+  ]
+};
+
+const RECAP = [
+  ["2016", "A weird dance at the Dirty Swan"],
+  ["", "First date at The Terminus"],
+  ["", "Bali belly. True love."],
+  ["", "Moved in. Just the two of us."],
+  ["", "4 Rotherwood Drive (good bones)"],
+  ["", "Player 3 joined: Lachlan"],
+  ["", "Player 4 joined: Finley"],
+  ["", "The reno. Survived it."],
+  ["", "The Question. SHE SAID YES.", true]
+];
+
+/* ---------- helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const app = $("#app");
+const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const wait = ms => new Promise(r => setTimeout(r, calm ? Math.min(ms, 60) : ms));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} }
+};
+let run = 0; // bumps on every screen change so stale timers stop
+
+/* ---------- 8-bit audio (ported from Part I) ---------- */
+let soundOn = store.get("rq2-sound") !== "off";
+let ctx = null;
+function bleep(freq = 440, type = "square", dur = 0.1, vol = 0.1) {
+  if (!soundOn) return;
+  try {
+    ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === "suspended") ctx.resume();
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, ctx.currentTime);
+    g.gain.setValueAtTime(vol, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + dur);
+    o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime + dur);
+  } catch {}
+}
+const seq = (notes, gap, type, dur, vol) => notes.forEach((f, i) => setTimeout(() => bleep(f, type, dur, vol), i * gap));
+const sfx = {
+  start: () => seq([440, 554, 659, 880], 100, "square", 0.2),
+  coin: () => { bleep(987.77, "square", 0.1, 0.05); setTimeout(() => bleep(1318.51, "square", 0.2, 0.05), 50); },
+  tick: () => bleep(150, "sawtooth", 0.01, 0.01),
+  levelUp: () => seq([523.25, 659.25, 783.99, 1046.5], 150, "square", 0.15),
+  boss: () => seq([110, 82, 110, 164, 110, 220, 164, 220], 120, "sawtooth", 0.1, 0.2),
+  chime: () => seq([440, 554, 659, 880, 1108, 1318], 100, "sine", 0.3, 0.05),
+  over: () => seq([200, 150, 100], 300, "sawtooth", 0.4),
+  nope: () => { bleep(220, "square", 0.08, 0.08); setTimeout(() => bleep(165, "square", 0.16, 0.08), 90); },
+  hello: () => { bleep(1200, "triangle", 0.1, 0.1); setTimeout(() => bleep(1500, "triangle", 0.3, 0.05), 80); }
+};
+const soundBtn = $("#sound");
+function paintSound() { soundBtn.textContent = "SOUND: " + (soundOn ? "ON" : "OFF"); soundBtn.setAttribute("aria-pressed", soundOn); }
+soundBtn.addEventListener("click", () => { soundOn = !soundOn; store.set("rq2-sound", soundOn ? "on" : "off"); paintSound(); sfx.coin(); });
+paintSound();
+
+/* ---------- avatars ---------- */
+// The same DiceBear seeds Part I uses, so the family looks exactly like it did in the game.
+const SEEDS = { Rachel: "Rachel_LongHair", Glenn: "Glenn_ShortHair", Lachlan: "Boy_Blonde_V2", Finley: "Boy_Brown_V3" };
+function hashSeed(name) { // the player's name never leaves the browser; only a hash is used as the seed
+  let h = 2166136261;
+  for (const ch of name.toLowerCase()) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+  return "Guest_" + (h >>> 0).toString(36);
+}
+function avatar(name, size, opts = {}) {
+  const seed = opts.you ? hashSeed(name) : SEEDS[name] || name;
+  const cls = ["av", SEEDS[name] && /Lachlan|Finley/.test(name) ? "kid" : "", opts.you ? "you" : "", opts.joined ? "joined" : ""].join(" ");
+  return `<span class="${cls}" style="width:${size}px;height:${size}px" title="${esc(name)}">
+    <span class="ini" aria-hidden="true">${esc(name.charAt(0))}</span>
+    <img src="https://api.dicebear.com/9.x/pixel-art/svg?seed=${encodeURIComponent(seed)}&scale=120" alt="${esc(name)}"
+      onerror="this.remove()" style="position:relative"></span>`;
+}
+
+/* ---------- game state ---------- */
+const state = { love: 0, player: "", joined: false, items: ["The Ring", "New Car", "Yummy Toast"], level: "BONUS LEVEL: The Wedding" };
+const ICONS = { "The Ring": "💍", "New Car": "🚗", "Yummy Toast": "🥪", "Golden Ticket": "🎟️" };
+
+function hud(flash) {
+  const size = innerWidth < 640 ? 24 : 32;
+  const party = ["Rachel", "Glenn", "Lachlan", "Finley"].map(n => avatar(n, size)).join("") +
+    (state.joined ? avatar(state.player, size, { you: true, joined: flash === "join" })
+                  : `<span class="av empty ${flash === "slot" ? "pulse" : ""}" style="width:${size}px;height:${size}px" title="Empty slot">?</span>`);
+  const items = state.items.slice(-3).map((it, i, a) =>
+    `<span class="item ${flash === "item" && i === a.length - 1 ? "new" : ""}" title="${esc(it)}" role="img" aria-label="${esc(it)}">${ICONS[it] || "📦"}</span>`).join("");
+  return `<header class="hud"><div class="hud-in">
+    <div class="lvl">${esc(state.level)}</div>
+    <div class="meter"><span class="heart" aria-hidden="true">♥</span>
+      <span class="bar" role="meter" aria-label="Love meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${state.love}"><i style="width:${state.love}%"></i></span></div>
+    <div class="hud-grid">
+      <div><div class="k">Party</div><div class="row party">${party}</div></div>
+      <div><div class="k">House</div><div class="row house" role="img" aria-label="Dream home">🏰</div></div>
+      <div><div class="k">Items</div><div class="row items">${items}</div></div>
+    </div></div></header>`;
+}
+function card(color, tag, inner) {
+  return `<div class="card ${color}">${tag ? `<div class="tag">${tag}</div>` : ""}${inner}
+    <i class="c c1"></i><i class="c c2"></i><i class="c c3"></i><i class="c c4"></i></div>`;
+}
+function show(html) {
+  run++;
+  app.innerHTML = html;
+  window.scrollTo(0, 0);
+  const first = app.querySelector("[autofocus]") || app.querySelector("h1, h2, .title");
+  if (first) { if (!first.hasAttribute("tabindex") && !/^(BUTTON|INPUT|A)$/.test(first.tagName)) first.setAttribute("tabindex", "-1"); first.focus({ preventScroll: true }); }
+  return run;
+}
+
+/* Typewriter: tap the card to finish early. Resolves when done. */
+function type(el, text, speed = 32) {
+  const me = run;
+  return new Promise(resolve => {
+    let i = 0, done = false;
+    const finish = () => { if (done) return; done = true; el.textContent = text; resolve(); };
+    el.closest(".card")?.addEventListener("click", finish, { once: true });
+    if (calm) return finish();
+    el.innerHTML = '<span class="caret">_</span>';
+    (function step() {
+      if (done || me !== run) return;
+      if (i >= text.length) return finish();
+      i++;
+      el.innerHTML = esc(text.slice(0, i)) + '<span class="caret">_</span>';
+      if (i % 2) sfx.tick();
+      setTimeout(step, speed);
+    })();
+  });
+}
+
+function hearts(n = 1) {
+  const box = $("#hearts");
+  for (let k = 0; k < n; k++) {
+    const h = document.createElement("span");
+    h.textContent = "♥";
+    h.style.left = Math.random() * 100 + "vw";
+    h.style.top = 40 + Math.random() * 60 + "vh";
+    h.style.fontSize = 10 + Math.random() * 20 + "px";
+    box.appendChild(h);
+    setTimeout(() => h.remove(), 2500);
+  }
+}
+
+/* ---------- screens ---------- */
+async function boot() {
+  show(`<main class="stage"><div class="spinner" aria-hidden="true"></div>
+    <p class="sub blink" role="status">BOOTING QUEST...</p></main>`);
+  await wait(1100);
+  title();
+}
+
+function title() {
+  show(`<main class="stage screen-in center">
+    ${card("pink", "", `
+      <h1 class="title">The<br>10<br>Year<br>Path</h1>
+      <p class="sub" style="margin-bottom:6px">PART II</p>
+      <p class="sub blink" style="color:var(--pink-hi);margin-bottom:28px">THE WEDDING</p>
+      <button class="btn" id="go" type="button" autofocus>Press start</button>
+      <p class="small" style="margin:22px 0 0">© 2016–2027 Rachel &amp; Glenn</p>`)}
+  </main>`);
+  $("#go").addEventListener("click", () => { sfx.start(); recap(); });
+}
+
+async function recap() {
+  const me = show(`<main class="stage screen-in">
+    ${card("", "Previously on…", `
+      <ol class="log" id="log">${RECAP.map(([yr, what, big]) =>
+        `<li class="${big ? "big" : ""}"><span class="yr">${yr}</span><span class="what">${esc(what)}</span><span class="ok">✓</span></li>`).join("")}
+      </ol>
+      <div class="memory" id="memory"><canvas id="mem" width="96" height="72" aria-label="Pixelated photo from the proposal" role="img"></canvas>
+        <span class="small">Save file: The Question</span></div>`)}
+    <button class="btn green" id="next" type="button" hidden>Load next level ▶</button>
+  </main>`);
+  pixelate(WEDDING.memory, $("#mem"), $("#memory"));
+  const rows = [...document.querySelectorAll("#log li")];
+  for (const li of rows) {
+    await wait(li.classList.contains("big") ? 600 : 330);
+    if (me !== run) return;
+    li.classList.add("on");
+    li.classList.contains("big") ? sfx.chime() : sfx.coin();
+  }
+  await wait(400);
+  if (me !== run) return;
+  $("#memory")?.classList.add("on");   // gone if the photo couldn't load
+  const next = $("#next");
+  next.hidden = false; next.focus();
+  next.addEventListener("click", () => { sfx.start(); newQuest(); });
+}
+
+// Draw a photo at 96px wide and let CSS blow it up with no smoothing: instant 8-bit.
+function pixelate(src, canvas, wrap) {
+  const img = new Image();
+  img.onload = () => {
+    const c = canvas.getContext("2d"), w = canvas.width, h = canvas.height;
+    const s = Math.max(w / img.width, h / img.height), dw = img.width * s, dh = img.height * s;
+    c.imageSmoothingEnabled = true;
+    c.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+  };
+  img.onerror = () => wrap.remove();
+  img.src = src;
+}
+
+async function newQuest() {
+  state.love = 0;
+  const me = show(`${hud("slot")}<main class="stage screen-in">
+    ${card("pink", "Bonus level", `
+      <p class="eyebrow">A new quest has appeared</p>
+      <h2>The Final Level</h2>
+      <p class="say" id="say"></p>`)}
+    <div class="options" id="opts" hidden>
+      <button class="opt" id="a" type="button"><b>A</b><span><small>Option A</small>Join the party.</span></button>
+      <button class="opt" id="b" type="button"><b>B</b><span><small>Option B</small>Stay home and get a puppy.</span></button>
+    </div>
+  </main>`);
+  await type($("#say"), "Rachel said yes. The house is finished (mostly). There's one level left, and it's a party level. Rachel and Glenn can't clear it without you.");
+  if (me !== run) return;
+  const opts = $("#opts");
+  opts.hidden = false; opts.classList.add("reveal");
+  $("#a").focus();
+  $("#a").addEventListener("click", () => { sfx.coin(); enterName(); });
+  $("#b").addEventListener("click", () => { sfx.over(); wasted("You get a puppy. It's cute, but you miss the best night of 2027. Also, there were already enough puppies in Part I."); });
+}
+
+function wasted(reason) {
+  show(`<main class="stage screen-in center" style="background:#000">
+    ${card("red", "", `
+      <p style="font-size:34px;margin:0 0 10px" aria-hidden="true">☠</p>
+      <h2 style="color:var(--red);font-size:22px;letter-spacing:-.02em">Wasted</h2>
+      <p class="say" style="min-height:0;margin-bottom:24px">${esc(reason)}</p>
+      <button class="btn grey" id="retry" type="button" autofocus>↻ Try again</button>`)}
+  </main>`);
+  $("#retry").addEventListener("click", () => { sfx.start(); newQuest(); });
+}
+
+function enterName() {
+  show(`${hud("slot")}<main class="stage screen-in center">
+    ${card("green", "New player", `
+      <h2 style="color:var(--green)">Player 5, enter your name</h2>
+      <form id="f" autocomplete="off">
+        <label class="small" for="nm" style="display:block;margin-bottom:10px">Name (it stays on your device)</label>
+        <input class="name-in" id="nm" maxlength="14" placeholder="YOUR NAME" autocapitalize="words" spellcheck="false" autofocus
+          value="${esc(state.player || store.get("rq2-name") || "")}">
+        <div class="preview" id="pv" aria-live="polite"></div>
+        <button class="btn green" type="submit">Join party ▶</button>
+      </form>`)}
+  </main>`);
+  const input = $("#nm"), pv = $("#pv");
+  let t;
+  const paint = () => {
+    const n = input.value.trim();
+    pv.innerHTML = n ? avatar(n, 64, { you: true }) + `<span style="color:var(--yellow);font-size:11px">${esc(n.toUpperCase())}</span>`
+                     : `<span class="av empty pulse" style="width:64px;height:64px">?</span>`;
+  };
+  input.addEventListener("input", () => { clearTimeout(t); t = setTimeout(paint, 250); if (input.value.length % 2) sfx.tick(); });
+  paint();
+  $("#f").addEventListener("submit", e => {
+    e.preventDefault();
+    const n = input.value.trim().replace(/\s+/g, " ");
+    if (!n) { sfx.nope(); input.focus(); input.placeholder = "TYPE A NAME!"; return; }
+    state.player = n; store.set("rq2-name", n);
+    sfx.hello();
+    encounter();
+  });
+}
+
+async function encounter() {
+  // Checkerboard wipe, like Part I's boss transition, but with no fast strobing.
+  sfx.boss();
+  const ch = document.createElement("div");
+  ch.className = "checker";
+  for (let i = 0; i < 144; i++) {
+    const sq = document.createElement("i");
+    sq.style.animationDelay = Math.random() * 0.7 + "s";
+    ch.appendChild(sq);
+  }
+  document.body.appendChild(ch);
+  await wait(1250);
+  battle();
+  document.body.classList.add("shake");
+  ch.classList.add("out");
+  [...ch.children].forEach(sq => sq.style.animationDelay = Math.random() * 0.5 + "s");
+  await wait(950);
+  ch.remove();
+  document.body.classList.remove("shake");
+}
+
+const ENVELOPE = `<svg class="envelope" viewBox="0 0 16 12" shape-rendering="crispEdges" aria-hidden="true">
+  <rect x="0" y="1" width="16" height="11" fill="#fdf2f8"/><rect x="0" y="11" width="16" height="1" fill="#f9a8d4"/>
+  <path d="M0 1h16v1h-1v1h-1v1h-1v1h-1v1h-1v1H5V6H4V5H3V4H2V3H1V2H0z" fill="#fbcfe8"/>
+  <path d="M0 1h1v1h1v1h1v1h1v1h1v1h6V5h1V4h1V3h1V2h1V1h1v1h-1v1h-1v1h-1v1h-1v1h-1v1H5V6H4V5H3V4H2V3H1V2H0z" fill="#f472b6"/>
+  <rect x="7" y="6" width="2" height="2" fill="#dc2626"/><rect x="6" y="6" width="1" height="1" fill="#dc2626"/><rect x="9" y="6" width="1" height="1" fill="#dc2626"/>
+  <rect x="7" y="8" width="2" height="1" fill="#dc2626"/></svg>`;
+
+const RUN_LINES = [
+  "Can't escape! Rachel has already locked the doors.",
+  "Still can't escape. Glenn is blocking the exit, doing the Dirty Swan dance.",
+  "Lachlan and Finley have hidden your car keys. It's super effective.",
+  "There is no running from this one. (There is no other answer.)"
+];
+
+async function battle() {
+  let runs = 0;
+  const me = show(`${hud()}<main class="stage">
+    <div class="arena">
+      <div class="foe" id="foe">
+        <div class="foe-hp"><div class="nm">INVITATION <span class="lv">Lv.99</span></div>
+          <div class="hpbar" aria-hidden="true"><i id="hp"></i></div></div>
+        ${ENVELOPE}
+      </div>
+      ${card("pink", "", `<p class="say msg" id="say" role="status"></p>`)}
+      <div class="invite" id="inv" hidden>
+        <p class="small" style="color:var(--green);margin:0">Rachel &amp; Glenn</p>
+        <p class="names">invite you to celebrate their marriage</p>
+        <p class="meta">${WEDDING.date} · ${WEDDING.arrive}<br>${WEDDING.venue} · ${WEDDING.area}</p>
+      </div>
+      <div class="cmd" id="cmd" hidden>
+        <button class="accept" id="acc" type="button">Accept</button>
+        <button class="run" id="run" type="button">Run</button>
+      </div>
+    </div>
+  </main>`);
+  await type($("#say"), "A wild INVITATION appeared!");
+  if (me !== run) return;
+  await wait(350);
+  $("#inv").hidden = false; sfx.chime();
+  await wait(500);
+  if (me !== run) return;
+  $("#cmd").hidden = false;
+  $("#acc").focus();
+  $("#run").addEventListener("click", async () => {
+    sfx.nope();
+    const say = $("#say");
+    await type(say, RUN_LINES[Math.min(runs++, RUN_LINES.length - 1)], 22);
+  });
+  $("#acc").addEventListener("click", async () => {
+    $("#cmd").hidden = true;
+    $("#foe").classList.add("hit");
+    $("#hp").style.width = "0%";
+    sfx.coin();
+    await type($("#say"), state.player.toUpperCase() + " used ACCEPT! It's super effective! The invitation is yours.", 24);
+    await wait(700);
+    if (me !== run) return;
+    levelUp();
+  });
+}
+
+function levelUp() {
+  state.joined = true;
+  if (!state.items.includes("Golden Ticket")) state.items.push("Golden Ticket");
+  state.love = 100;
+  sfx.levelUp();
+  hearts(14);
+  const me = show(`${hud("join")}<main class="stage"></main>
+    <div class="overlay" role="dialog" aria-modal="true" aria-labelledby="lu">
+      ${card("green", "", `<div class="center">
+        <div style="margin-bottom:18px"><span class="levelup" id="lu" tabindex="-1">Level up!</span>
+          <p class="small" style="color:var(--green);margin:10px 0 0">Party complete</p></div>
+        <div style="display:flex;justify-content:center;margin-bottom:8px">${avatar(state.player, 72, { you: true, joined: true })}</div>
+        <h2 style="color:var(--green);margin:12px 0 4px">${esc(state.player)} joined the party</h2>
+        <div class="gains">
+          <div><span class="l1">♥ Love gained</span><b>+9999</b></div>
+          <div><span class="l2">🎁 New item</span><b class="gold">🎟️ GOLDEN TICKET</b></div>
+          <div><span class="l3">👤 Party size</span><b>5</b></div>
+        </div>
+        <button class="btn green" id="cont" type="button">Open quest log ▶</button></div>`)}
+    </div>`);
+  $("#lu").focus();
+  $("#cont").addEventListener("click", () => { sfx.coin(); questLog(); });
+  (async () => { for (let i = 0; i < 6; i++) { await wait(400); if (me !== run) return; hearts(2); } })();
+}
+
+function questLog() {
+  state.level = "Quest accepted";
+  show(`${hud("item")}<main class="stage screen-in">
+    <div class="ql">
+      ${card("gold", "Quest log", `
+        <p class="eyebrow">Main quest</p>
+        <h2 style="color:var(--yellow)">Celebrate Rachel &amp; Glenn's marriage</h2>
+        <div class="facts">
+          <div><p>When</p><b>${WEDDING.date}</b></div>
+          <div><p>Spawn</p><b>${WEDDING.arrive}</b></div>
+          <div class="wide"><p>Where</p><b>${WEDDING.venue}, ${WEDDING.area}</b>
+            <span style="display:block;margin-top:6px;font-family:var(--term);font-size:18px;text-transform:none;color:#9ca3af">${esc(WEDDING.address)}</span></div>
+        </div>
+        <p class="eyebrow" style="margin-top:22px">Objectives</p>
+        <ol class="obj">${WEDDING.schedule.map(([t, d, sub, main]) =>
+          `<li class="${main ? "main" : ""}"><span class="t">${t}</span><span class="d">${esc(d)}${sub ? `<small>${esc(sub)}</small>` : ""}</span></li>`).join("")}
+        </ol>`)}
+      <div class="acts">
+        <a class="btn span" href="${WEDDING.rsvp}">Send your RSVP ▶</a>
+        <button class="btn gold" id="ics" type="button">💾 Save the date</button>
+        <a class="btn green" href="${WEDDING.maps}" target="_blank" rel="noopener">🗺 Open map</a>
+      </div>
+      <p class="toast" id="toast" role="status"></p>
+      <div class="end">
+        <p class="big">See you at the final level, ${esc(state.player.split(" ")[0])}</p>
+        <p class="small">Thanks for playing</p>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">
+          <a class="link-btn" href="${WEDDING.partOne}">Play Part I: The 10 Year Path</a>
+          <button class="link-btn" id="again" type="button">Replay</button>
+        </div>
+      </div>
+    </div>
+  </main>`);
+  $("#ics").addEventListener("click", saveTheDate);
+  $("#again").addEventListener("click", () => {
+    Object.assign(state, { love: 0, joined: false, level: "BONUS LEVEL: The Wedding" });
+    state.items = state.items.filter(i => i !== "Golden Ticket");
+    sfx.start(); title();
+  });
+}
+
+function saveTheDate() {
+  // 4.15pm to 11pm AEDT (UTC+11) on 20 Feb 2027.
+  const rsvp = new URL(WEDDING.rsvp, location.href).href;
+  const ics = [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Rachel and Glenn//The 10 Year Path//EN", "CALSCALE:GREGORIAN",
+    "BEGIN:VEVENT",
+    "UID:rachel-glenn-wedding-20270220@gwsampso.github.io",
+    "DTSTAMP:" + new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, ""),
+    "DTSTART:20270220T051500Z", "DTEND:20270220T120000Z",
+    "SUMMARY:Rachel & Glenn's wedding",
+    "LOCATION:Jackalope\\, 166 Balnarring Road\\, Merricks North VIC 3926",
+    "DESCRIPTION:Arrive 4.15pm on the Guest Terrace. Ceremony 4.30pm. RSVP: " + rsvp,
+    "END:VEVENT", "END:VCALENDAR"
+  ].join("\r\n");
+  const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
+  const a = Object.assign(document.createElement("a"), { href: url, download: "rachel-and-glenn-wedding.ics" });
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  sfx.coin();
+  $("#toast").textContent = "GAME SAVED. Open the file to add it to your calendar.";
+}
+
+boot();
+</script>
+</body>
+</html>
