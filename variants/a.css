@@ -1,0 +1,33 @@
+/* ===== Version A: Daylight. Pale stone, ink type, vine green, photos framed like prints. ===== */
+:root{--ink:#eceae4;--char:#e4e1d9;--ivory:#171614;--mute:#6a665e;--brass:#56633f;--line:rgba(23,22,20,.2);--error:#a5432c;
+  --display:"Bodoni Moda","Didot","Bodoni MT",Georgia,serif;--body:"Hanken Grotesk","Helvetica Neue",Arial,sans-serif;color-scheme:light}
+body{font-weight:400}
+.top{background:var(--ink);border-bottom:1px solid var(--line);padding-top:.85rem;padding-bottom:.85rem}
+.menu{background:rgba(236,234,228,.97)}
+input::placeholder{color:rgba(106,102,94,.6)}
+.panel{grid-template-rows:30vh 1fr;grid-template-rows:30dvh 1fr;padding-top:3.5rem}
+.media{position:relative;inset:auto;margin:1rem 1rem 0;overflow:hidden;background:linear-gradient(160deg,#d9d5ca,#c6c1b3)}
+.media::after,.hero .media::after{display:none}
+.content{justify-content:flex-start;padding:1.5rem 1.5rem 2.25rem;gap:1.05rem}
+.hero{grid-template-rows:44vh 1fr;grid-template-rows:44dvh 1fr}
+.hero .content{align-items:flex-start;text-align:left;justify-content:center;padding-bottom:4.5rem;gap:1.05rem}
+.rsvp{grid-template-rows:1fr}
+.rsvp .content{padding-top:2rem}
+h1{font-size:clamp(3rem,13vw,7.5rem);font-weight:400}
+h2{font-weight:400;font-size:clamp(2rem,5vw,3.6rem)}
+.sheet dt,.sheet dd{padding:.6rem 0}
+.cue{left:auto;right:1.5rem;transform:none}/* The Invitation panel has no photo: one row, a vine-green frame. */
+.invitation{grid-template-rows:1fr}
+.invitation::before{border-color:rgba(86,99,63,.4)}
+.invitation::after{border-color:rgba(86,99,63,.16)}
+.invitation .sign{font-style:italic}
+.hero .invite{font-weight:400}
+@media (min-width:900px){
+  .panel,.hero{grid-template-rows:1fr;grid-template-columns:1fr 1fr}
+  .rsvp,.invitation{grid-template-columns:1fr}
+  .media,.split .media{margin:2.5rem 0 2.5rem 2.5rem}
+  .split.flip .media,.hero .media{order:2;margin:2.5rem 2.5rem 2.5rem 0}
+  .content,.split .content,.hero .content{justify-content:center;padding:3rem clamp(3rem,6vw,6rem)}
+  .split .media::after{display:none}
+  .cue{right:auto;left:clamp(3rem,6vw,6rem)}
+}

@@ -14,7 +14,7 @@ Five full-screen panels that snap one at a time as you scroll:
 | The Place | `#the-place` | About Jackalope, address, Maps link |
 | RSVP | `#rsvp` | Reply form |
 
-There is also a second, separate page at `quest/` (see [The 8-bit invitation](#the-8-bit-invitation-quest) below). The main site does not link to it.
+There are also three alternative looks at `a/`, `b/` and `c/` (see [Versions A, B and C](#versions-a-b-and-c-a-b-c)), and a separate page at `quest/` (see [The 8-bit invitation](#the-8-bit-invitation-quest) below). The main site does not link to any of them.
  
 The Menu button (top right) opens a full-screen overlay for jumping between panels. On desktop there are also small dots down the right-hand side.
  
@@ -119,6 +119,24 @@ Fonts are Cormorant Garamond (headings) and Jost (body), loaded from Google Font
 - [ ] Complete the guest list, including nicknames and married names
 - [ ] Confirm the 4.15pm arrival time and the RSVP date
 - [ ] Read the invitation letter together and make it sound like you both
+
+## Versions A, B and C (`a/`, `b/`, `c/`)
+
+Three alternative looks for the same site, each with identical wording, run sheet, guest list and RSVP form:
+
+| Link | Look |
+|---|---|
+| `/gws-wedding/a/` | **Daylight:** pale stone, ink type, vine green, photos framed like prints (Bodoni Moda and Hanken Grotesk) |
+| `/gws-wedding/b/` | **Cinema:** pure black and white, every panel a full-bleed photo, one clean sans (Outfit) |
+| `/gws-wedding/c/` | **Lights:** no photos, a slow field of amber bulbs (Marcellus and Mulish) |
+
+They are built from `index.html`, so **don't edit `a/`, `b/` or `c/` by hand**. Change the words in `index.html`, then run:
+
+```
+python3 variants/build.py
+```
+
+and commit the result. Each version's look lives in `variants/a.css`, `variants/b.css` and `variants/c.css` (plus `variants/c.js` for the bulbs). Replies from any version go to the same inbox.
 
 ## The 8-bit invitation (`quest/`)
 
