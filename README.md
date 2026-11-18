@@ -14,7 +14,7 @@ Five full-screen panels that snap one at a time as you scroll:
 | The Place | `#the-place` | About Jackalope, address, Maps link |
 | RSVP | `#rsvp` | Reply form |
 
-There are also three alternative looks at `a/`, `b/` and `c/` (see [Versions A, B and C](#versions-a-b-and-c-a-b-c)), and a separate page at `quest/` (see [The 8-bit invitation](#the-8-bit-invitation-quest) below). The main site does not link to any of them.
+There are also three alternative looks at `a/`, `b/` and `c/` (see [Versions A, B and C](#versions-a-b-and-c-a-b-c)), two different takes at `d/` and `e/` with personal links (see [Version D and E](#version-d-our-story-d-and-version-e-the-card-e)), and a separate page at `quest/` (see [The 8-bit invitation](#the-8-bit-invitation-quest) below). The main site does not link to any of them.
  
 The Menu button (top right) opens a full-screen overlay for jumping between panels. On desktop there are also small dots down the right-hand side.
  
@@ -36,7 +36,7 @@ Search `index.html` for `const CONFIG`, near the bottom of the file:
  
 ```js
 const CONFIG = {
-  notifyEmail: "gwsampso@gmail.com",
+  notifyEmail: "4ac5529b5dc45779b253178f1421c56a",
   rsvpBy: "Friday 15 January 2027",
   guests: [
     "Mark Sampson",
@@ -47,7 +47,7 @@ const CONFIG = {
 };
 ```
  
-- `notifyEmail`: where RSVP notifications are sent.
+- `notifyEmail`: where RSVP notifications are sent. This is FormSubmit's alias for the inbox, so the real email address isn't in the page. (Versions D and E read the same alias from `shared/invite.js`.)
 - `rsvpBy`: the reply-by date shown above the form.
 - `guests`: the invited guest list (see below).
 ### Guest list
@@ -78,7 +78,7 @@ Emails are sent through FormSubmit (formsubmit.co), a free form-to-email service
 2. Submit one test RSVP yourself.
 3. FormSubmit emails you an activation link. Click it.
 4. From then on every RSVP arrives in your inbox.
-Check the spam folder if the activation email does not appear. FormSubmit also offers a random alias to use in place of your address in `notifyEmail`, which keeps your email out of the page source.
+Check the spam folder if the activation email does not appear. The site already uses FormSubmit's random alias in place of the email address, so the address stays out of the page source.
  
 The form has no accept or decline option and replies are not stored anywhere other than your inbox.
  
@@ -137,6 +137,21 @@ python3 variants/build.py
 ```
 
 and commit the result. Each version's look lives in `variants/a.css`, `variants/b.css` and `variants/c.css` (plus `variants/c.js` for the bulbs). Replies from any version go to the same inbox.
+
+## Version D: Our story (`d/`) and Version E: The card (`e/`)
+
+Two different takes on the invitation, both in the main site's black and brass:
+
+- **D, Our story** (`/gws-wedding/d/`): the ten years in twelve chapters with your own photos (the Dirty Swan to the proposal), ending with "And now: we're getting married", then the day, the place and the RSVP. Chapter words are in `CHAPTERS` near the bottom of `d/index.html`, and the photos are in `d/photos/`.
+- **E, The card** (`/gws-wedding/e/`): one screen, like the real thing. A black envelope with a brass seal and the guest's name opens into an ivory card. Tap "The details" to turn it over, and "Reply" for the RSVP.
+
+### Personal links
+
+D and E greet each guest by name and fill in their RSVP when opened from a personal link (`…/d/?to=…`). Make the links at **`/gws-wedding/links/`**: paste one household per line (`Mark Sampson, Cheryl Sampson`), optionally followed by `| Greeting`. It gives you a link and a ready-to-send message for each household, plus a CSV of them all.
+
+The names travel inside the link, so the site never stores a guest list. A plain link without `?to=` still works and greets "Our family & friends". Replies arrive in the same inbox as the main site's, with two extra lines: **Invitation** (who the link was for) and **Guest list check**, which flags anyone who cleared their name ("not coming") or changed it. Replies sent without a personal link are flagged too.
+
+The shared code for the links and the form is `shared/invite.js`.
 
 ## The 8-bit invitation (`quest/`)
 

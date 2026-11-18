@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0d0c0b">
+<title>Personal links</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* The link maker. Nothing typed here is saved or sent anywhere: the names go into the links. */
+:root{--ink:#0d0c0b;--char:#171513;--ivory:#f1ece3;--mute:#a79f92;--brass:#c9a35c;--line:rgba(241,236,227,.16);
+  --display:"Cormorant Garamond",Georgia,serif;--body:"Jost","Helvetica Neue",Arial,sans-serif;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--ivory);font:300 1rem/1.6 var(--body)}
+main{max-width:880px;margin:0 auto;padding:3rem 16px 5rem;display:grid;gap:1.5rem}
+h1{font:300 clamp(2.2rem,6vw,3.2rem)/1.05 var(--display);margin:0}
+h1 em{font-style:italic;color:var(--brass)}
+p{margin:0;max-width:44rem}
+.mute{color:var(--mute);font-size:.92rem}
+code{font-size:.9em;color:var(--brass)}
+label{font:400 .7rem/1 var(--body);letter-spacing:.24em;text-transform:uppercase;color:var(--brass)}
+textarea,input{width:100%;background:var(--char);color:var(--ivory);border:1px solid var(--line);padding:.9rem 1rem;font:300 1rem/1.6 var(--body);border-radius:2px}
+textarea:focus,input:focus{outline:0;border-color:var(--brass)}
+.row{display:grid;gap:.6rem}
+.btns{display:flex;gap:.8rem;flex-wrap:wrap}
+button{background:transparent;color:var(--ivory);border:1px solid var(--brass);padding:.8rem 1.3rem;cursor:pointer;
+  font:400 .7rem/1 var(--body);letter-spacing:.24em;text-transform:uppercase}
+button:hover{background:var(--brass);color:var(--ink)}
+button.small{padding:.5rem .7rem;font-size:.62rem;letter-spacing:.18em}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th{text-align:left;font:400 .66rem/1 var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--mute);padding:.6rem .5rem;border-bottom:1px solid var(--line)}
+td{padding:.8rem .5rem;border-bottom:1px solid var(--line);vertical-align:top}
+td.who{font-family:var(--display);font-size:1.2rem;line-height:1.3}
+td.who span{display:block;font:300 .82rem/1.4 var(--body);color:var(--mute)}
+td a{color:var(--brass);word-break:break-all;font-size:.8rem}
+.acts{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem}
+.toast{min-height:1.5em;color:var(--brass);font-size:.9rem}
+@media (max-width:640px){
+  thead{display:none}
+  tr{display:grid;gap:.4rem;padding:.8rem 0;border-bottom:1px solid var(--line)}
+  td{border:0;padding:.2rem 0}
+}
+</style>
+</head>
+<body>
+<main>
+  <h1>Personal <em>links</em></h1>
+  <p>One household per line, names separated by commas. Each household gets its own link that greets them by name and fills in their RSVP. To choose the greeting yourself, add it after a <code>|</code>.</p>
+  <p class="mute">Nothing you type here is saved or sent anywhere. The names are carried inside each link, so the website never stores a guest list.</p>
+
+  <div class="row">
+    <label for="list">Guests</label>
+    <textarea id="list" rows="7" spellcheck="false" placeholder="Mark Sampson, Cheryl Sampson
+Gemma Sampson, Casey Sampson | Gem & Casey
+Katherine Smith"></textarea>
+  </div>
+  <div class="btns">
+    <button id="make" type="button">Make links</button>
+    <button id="csv" type="button" hidden>Download all as a spreadsheet (CSV)</button>
+  </div>
+  <p class="toast" id="toast" role="status"></p>
+  <div id="out"></div>
+</main>
+
+<script src="../shared/invite.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const base = new URL("../", location.href).href;          // .../gws-wedding/
+const VERSIONS = [["d", "Our story"], ["e", "The card"]];
+let rows = [];
+
+function parse(text) {
+  return text.split(/\n/).map(l => l.trim()).filter(Boolean).map(line => {
+    const [names, greet] = line.split("|");
+    const list = names.split(",").map(s => s.trim()).filter(Boolean);
+    const greeting = (greet || "").trim() || Invite.greetingFor(list);
+    const token = Invite.encodeGuest(list, greeting);
+    const links = Object.fromEntries(VERSIONS.map(([k]) => [k, `${base}${k}/?to=${token}`]));
+    return { list, greeting, links };
+  }).filter(r => r.list.length);
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const message = (r, k) => `Hi ${r.greeting}! We're getting married on Saturday 20 February 2027 and we'd love you to be there. Here's your invitation: ${r.links[k]}`;
+
+async function copy(text, what) {
+  try { await navigator.clipboard.writeText(text); $("#toast").textContent = "Copied " + what + "."; }
+  catch { prompt("Copy this:", text); }
+}
+
+$("#make").addEventListener("click", () => {
+  rows = parse($("#list").value);
+  $("#csv").hidden = !rows.length;
+  if (!rows.length) { $("#out").innerHTML = ""; $("#toast").textContent = "Add at least one name."; return; }
+  $("#toast").textContent = rows.length + (rows.length === 1 ? " household." : " households.");
+  $("#out").innerHTML = `<table><thead><tr><th>Household</th>${VERSIONS.map(([k, n]) => `<th>${k.toUpperCase()}: ${n}</th>`).join("")}</tr></thead><tbody>
+    ${rows.map((r, i) => `<tr><td class="who">${esc(r.greeting)}<span>${esc(r.list.join(", "))}</span></td>
+      ${VERSIONS.map(([k]) => `<td><a href="${esc(r.links[k])}" target="_blank" rel="noopener">${esc(r.links[k].replace(/^https?:\/\//, "").slice(0, 46))}…</a>
+        <div class="acts"><button class="small" data-i="${i}" data-k="${k}" data-what="link" type="button">Copy link</button>
+        <button class="small" data-i="${i}" data-k="${k}" data-what="message" type="button">Copy message</button></div></td>`).join("")}</tr>`).join("")}
+  </tbody></table>`;
+});
+
+$("#out").addEventListener("click", e => {
+  const b = e.target.closest("button[data-i]");
+  if (!b) return;
+  const r = rows[+b.dataset.i];
+  b.dataset.what === "link" ? copy(r.links[b.dataset.k], "the link for " + r.greeting) : copy(message(r, b.dataset.k), "the message for " + r.greeting);
+});
+
+$("#csv").addEventListener("click", () => {
+  const q = s => '"' + String(s).replace(/"/g, '""') + '"';
+  const lines = [["Greeting", "Names", ...VERSIONS.map(([k, n]) => `${k.toUpperCase()} ${n}`)].map(q).join(",")]
+    .concat(rows.map(r => [r.greeting, r.list.join(", "), ...VERSIONS.map(([k]) => r.links[k])].map(q).join(",")));
+  const url = URL.createObjectURL(new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv" }));
+  Object.assign(document.createElement("a"), { href: url, download: "wedding-personal-links.csv" }).click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+</script>
+</body>
+</html>
